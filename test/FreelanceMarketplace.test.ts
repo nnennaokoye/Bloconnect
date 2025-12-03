@@ -123,7 +123,7 @@ describe("FreelanceMarketplace - Modular Architecture Test Suite", function () {
     });
   });
 
-  describe("💼 Job Management Module", function () {
+  describe(" Job Management Module", function () {
     beforeEach(async function () {
       await marketplace.connect(client).registerUser(PROFILE_HASH);
       await marketplace.connect(freelancer).registerUser(PROFILE_HASH);
