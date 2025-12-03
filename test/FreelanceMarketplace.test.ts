@@ -19,7 +19,7 @@ describe("FreelanceMarketplace - Modular Architecture Test Suite", function () {
   const MILESTONE_DESCRIPTION_HASH = "QmMilestone101";
 
   beforeEach(async function () {
-    [owner, client, freelancer, freelancer2, arbitrator, ...addrs] = await ethers.getSigners();
+    [client, freelancer, freelancer2, arbitrator, ...addrs] = await ethers.getSigners();
 
     // Deploy the main contract which inherits all modular functionality
     const FreelanceMarketplace = await ethers.getContractFactory("FreelanceMarketplace");
