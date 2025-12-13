@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-/// @title AnyworkMarketplace - Artisan registry, job payment, and escrow contract
+/// @title Bloconnect - Artisan registry, job payment, and escrow contract
 /// @notice Supports job creation, verification, cancellation, dispute resolution, and timeouts.
 contract AnyworkMarketplace {
     // --- Ownership & Platform Config ---
