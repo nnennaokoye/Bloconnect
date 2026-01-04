@@ -3,6 +3,7 @@ pragma solidity ^0.8.28;
 
 /// @title Bloconnect - Artisan registry, job payment, and escrow contract
 /// @notice Supports job creation, verification, cancellation, dispute resolution, and timeouts.
+/// @dev Improved version with security fixes and reentrancy protection
 contract Bloconnect {
     // --- Ownership & Platform Config ---
 
@@ -10,14 +11,27 @@ contract Bloconnect {
     uint256 public platformFeePercent = 5; // 5% platform fee by default
     uint256 public jobTimeoutDays = 7; // days before artisan can claim if not completed
     uint256 public disputeWindowDays = 2; // days client has to dispute claimed job
+    
+    // Reentrancy guard
+    uint256 private constant NOT_ENTERED = 1;
+    uint256 private constant ENTERED = 2;
+    uint256 private _status;
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not owner");
         _;
     }
 
+    modifier nonReentrant() {
+        require(_status != ENTERED, "Reentrancy detected");
+        _status = ENTERED;
+        _;
+        _status = NOT_ENTERED;
+    }
+
     constructor() {
         owner = msg.sender;
+        _status = NOT_ENTERED;
     }
 
     // --- Admin Functions ---
@@ -37,12 +51,23 @@ contract Bloconnect {
         disputeWindowDays = days_;
     }
 
-    function withdrawPlatformFees() external onlyOwner {
-        uint256 balance = address(this).balance;
-        require(balance > 0, "No fees to withdraw");
+    /// @notice Withdraw accumulated platform fees only (not job escrow funds)
+    /// @dev Fixed to only withdraw accumulated fees, not all contract balance
+    function withdrawPlatformFees() external onlyOwner nonReentrant {
+        uint256 fees = accumulatedFees;
+        require(fees > 0, "No fees to withdraw");
         
-        (bool ok, ) = owner.call{value: balance}("");
+        accumulatedFees = 0; // Zero before transfer (CEI pattern)
+        
+        (bool ok, ) = owner.call{value: fees}("");
         require(ok, "Transfer failed");
+    }
+
+    /// @notice Transfer ownership to a new address
+    /// @dev Added for better access control management
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "Invalid new owner");
+        owner = newOwner;
     }
 
     // --- Artisans ---
@@ -86,13 +111,8 @@ contract Bloconnect {
 
     /// @notice Simple function for artisans to verify their identity
     /// @dev This would be called after off-chain verification is complete
-    function verifyIdentity() external {
-        require(artisans[msg.sender].registered, "Register as artisan first");
-        require(!artisans[msg.sender].verified, "Already verified");
-        
-        artisans[msg.sender].verified = true;
-        emit IdentityVerified(msg.sender, block.timestamp);
-    }
+    /// @dev Removed to prevent self-verification; only owner should verify
+    /// @dev Use setArtisanVerified instead for proper verification flow
 
     // --- Jobs ---
 
@@ -123,7 +143,7 @@ contract Bloconnect {
     event JobCancelled(uint256 indexed jobId, address indexed cancelledBy);
     event JobWithdrawn(uint256 indexed jobId, address indexed artisan, uint256 amountAfterFee, uint256 platformFee);
     event JobClaimedAfterTimeout(uint256 indexed jobId, address indexed artisan, uint256 claimedAt);
-    event JobDisputedByCLient(uint256 indexed jobId, address indexed client);
+    event JobDisputedByClient(uint256 indexed jobId, address indexed client);
     event JobFinalizedAfterDispute(uint256 indexed jobId, address indexed artisan, uint256 amountAfterFee, uint256 platformFee);
 
     /// @notice Create and fund a job for a verified artisan.
@@ -167,7 +187,7 @@ contract Bloconnect {
 
     /// @notice Cancel an active job and refund the client.
     /// @dev Client can cancel anytime. Artisan can only cancel after timeout.
-    function cancelJob(uint256 jobId) external {
+    function cancelJob(uint256 jobId) external nonReentrant {
         Job storage job = jobs[jobId];
         require(job.client != address(0), "Job does not exist");
         require(job.status == JobStatus.Active, "Job not active");
@@ -180,7 +200,7 @@ contract Bloconnect {
 
         job.status = JobStatus.Cancelled;
         uint256 refundAmount = job.amount;
-        job.amount = 0;
+        job.amount = 0; // Zero before transfer (CEI pattern)
 
         (bool ok, ) = job.client.call{value: refundAmount}("");
         require(ok, "Refund failed");
@@ -191,7 +211,7 @@ contract Bloconnect {
     /// @notice Artisan withdraws funds for a completed job.
     /// @dev Can only be called once per job, after completion.
     /// @dev Platform fee is deducted automatically.
-    function withdrawJobPayment(uint256 jobId) external {
+    function withdrawJobPayment(uint256 jobId) external nonReentrant {
         Job storage job = jobs[jobId];
         require(job.client != address(0), "Job does not exist");
         require(msg.sender == job.artisan, "Not job artisan");
@@ -199,7 +219,7 @@ contract Bloconnect {
 
         job.status = JobStatus.Withdrawn;
         uint256 totalAmount = job.amount;
-        job.amount = 0;
+        job.amount = 0; // Zero before transfer (CEI pattern)
 
         // Calculate platform fee and artisan amount
         uint256 platformFee = (totalAmount * platformFeePercent) / 100;
@@ -230,7 +250,7 @@ contract Bloconnect {
 
     /// @notice Client can dispute a claimed job within the dispute window.
     /// @dev Refunds the client if they dispute within the window.
-    function disputeClaimedJob(uint256 jobId) external {
+    function disputeClaimedJob(uint256 jobId) external nonReentrant {
         Job storage job = jobs[jobId];
         require(job.client != address(0), "Job does not exist");
         require(msg.sender == job.client, "Not job client");
@@ -239,17 +259,17 @@ contract Bloconnect {
 
         job.status = JobStatus.Disputed;
         uint256 refundAmount = job.amount;
-        job.amount = 0;
+        job.amount = 0; // Zero before transfer (CEI pattern)
 
         (bool ok, ) = job.client.call{value: refundAmount}("");
         require(ok, "Refund failed");
 
-        emit JobDisputedByCLient(jobId, msg.sender);
+        emit JobDisputedByClient(jobId, msg.sender);
     }
 
     /// @notice Artisan can finalize withdrawal after dispute window closes.
     /// @dev Only callable if no dispute was filed and window has passed.
-    function finalizeClaimedJob(uint256 jobId) external {
+    function finalizeClaimedJob(uint256 jobId) external nonReentrant {
         Job storage job = jobs[jobId];
         require(job.client != address(0), "Job does not exist");
         require(msg.sender == job.artisan, "Not job artisan");
@@ -258,7 +278,7 @@ contract Bloconnect {
 
         job.status = JobStatus.Withdrawn;
         uint256 totalAmount = job.amount;
-        job.amount = 0;
+        job.amount = 0; // Zero before transfer (CEI pattern)
 
         // Calculate platform fee and artisan amount
         uint256 platformFee = (totalAmount * platformFeePercent) / 100;
@@ -270,6 +290,40 @@ contract Bloconnect {
         require(ok, "Transfer failed");
 
         emit JobFinalizedAfterDispute(jobId, msg.sender, artisanAmount, platformFee);
+    }
+
+    /// @notice Get job details
+    /// @dev Helper function for frontend integration
+    function getJob(uint256 jobId) external view returns (
+        address client,
+        address artisan,
+        uint256 amount,
+        JobStatus status,
+        uint256 createdAt,
+        uint256 claimedAt,
+        string memory description
+    ) {
+        Job storage job = jobs[jobId];
+        return (
+            job.client,
+            job.artisan,
+            job.amount,
+            job.status,
+            job.createdAt,
+            job.claimedAt,
+            job.description
+        );
+    }
+
+    /// @notice Get artisan details
+    /// @dev Helper function for frontend integration
+    function getArtisan(address artisan) external view returns (
+        bool registered,
+        bool verified,
+        string memory metadataURI
+    ) {
+        Artisan storage a = artisans[artisan];
+        return (a.registered, a.verified, a.metadataURI);
     }
 
     // --- Fallback ---
