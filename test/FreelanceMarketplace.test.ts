@@ -280,7 +280,7 @@ describe("FreelanceMarketplace - Modular Architecture Test Suite", function () {
     });
   });
 
-  describe("📝 Proposal Management Module", function () {
+  describe(" Proposal Management Module", function () {
     let jobId: number;
 
     beforeEach(async function () {
