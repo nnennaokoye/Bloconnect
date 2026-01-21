@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,22 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Script id="init-theme" strategy="beforeInteractive">
+          {`
+            (function(){
+              try {
+                var stored = localStorage.getItem('theme');
+                var theme = stored === 'dark' || stored === 'light' ? stored : 'light';
+                var de = document.documentElement;
+                de.dataset.theme = theme;
+                if (theme === 'dark') { de.classList.add('dark'); } else { de.classList.remove('dark'); }
+              } catch (e) {
+                document.documentElement.dataset.theme = 'light';
+                document.documentElement.classList.remove('dark');
+              }
+            })();
+          `}
+        </Script>
         <div className="mx-auto max-w-7xl px-6">
           <header className="flex items-center justify-between py-5">
             <Link href="/" className="flex items-center gap-2 text-base font-semibold">
