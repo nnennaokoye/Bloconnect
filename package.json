@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "install:frontend": "npm --prefix frontend install",
+    "dev:frontend": "npm --prefix frontend run dev"
   },
   "keywords": [],
   "author": "",
