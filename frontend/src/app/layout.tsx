@@ -32,11 +32,12 @@ export default function RootLayout({
           {`
             (function(){
               try {
-                var stored = localStorage.getItem('theme');
-                var theme = stored === 'dark' || stored === 'light' ? stored : 'light';
                 var de = document.documentElement;
+                // Force light theme on initial load and persist it
+                var theme = 'light';
                 de.dataset.theme = theme;
-                if (theme === 'dark') { de.classList.add('dark'); } else { de.classList.remove('dark'); }
+                de.classList.remove('dark');
+                try { localStorage.setItem('theme', theme); } catch (_) {}
               } catch (e) {
                 document.documentElement.dataset.theme = 'light';
                 document.documentElement.classList.remove('dark');
