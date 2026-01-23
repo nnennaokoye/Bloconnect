@@ -29,7 +29,7 @@ Bloconnect is a smart contract system built on Ethereum that facilitates secure 
 
 ### Core Components
 
-#### 1. Artisan Registry
+#### 1. Artisan Registryy
 ```solidity
 struct Artisan {
     bool registered;
