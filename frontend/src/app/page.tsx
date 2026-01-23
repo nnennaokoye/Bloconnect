@@ -73,7 +73,7 @@ export default function Home() {
           </div>
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/15">
             <div className="text-3xl font-semibold">3</div>
-            <h4 className="mt-3 font-medium">Complete or claim</h4>
+            <h4 className="mt-3 font-medium">Complete or Claim</h4>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Client marks complete for withdrawal, or artisan claims after timeout.</p>
           </div>
           </div>
