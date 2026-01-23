@@ -31,7 +31,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="inline-flex items-center gap-2 rounded-full border border-black/10 px-5 py-2.5 text-sm transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+      className="inline-flex items-center gap-2 rounded-full border border-black/20 px-5 py-2.5 text-sm transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
       aria-label="Toggle theme"
       title="Toggle theme"
     >
