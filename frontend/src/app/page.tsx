@@ -21,7 +21,7 @@ export default function Home() {
               href="/artisans"
               className="inline-flex h-12 items-center justify-center rounded-full bg-black px-6 text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-300"
             >
-              Find artisans
+              Find artisans.
             </Link>
             <Link
               href="/profile"
