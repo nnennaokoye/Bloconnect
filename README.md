@@ -1,6 +1,6 @@
 # Bloconnect
 
-A decentralized platform connecting clients with verified artisans through blockchain-based escrow and payment management.
+A decentralized platform connecting clients with verified artisans through blockchain-based escrow and payment management..
 
 ## Overview
 
@@ -15,7 +15,7 @@ Bloconnect is a smart contract system built on Ethereum that facilitates secure 
 - **Profile Metadata**: Link to off-chain profile data (IPFS/URL) for portfolios and credentials
 
 ### For Clients
-- **Hire Verified Artisans**: Only work with platform-verified service providers
+- **Hire Verified Artisans**: Only work with platform-verified service providers always
 - **Escrow Protection**: Funds held securely until job completion
 - **Flexible Cancellation**: Cancel jobs anytime and receive full refund
 - **Dispute Window**: Challenge artisan claims within a configurable timeframe
