@@ -8,7 +8,7 @@ export default function Home() {
         <section className="flex flex-col items-center gap-8 text-center">
           <div className="flex items-center gap-3 rounded-full border border-black/10 px-3 py-1 text-sm dark:border-white/15">
             <span className="inline-flex h-2 w-2 rounded-full bg-sky-500" />
-            <span>Live on Base soon · Low fees, fast finality</span>
+            <span>Live on Base · Low fees, fast finality</span>
           </div>
           <h1 className="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
             Hire verified artisans with escrowed payments on Base
