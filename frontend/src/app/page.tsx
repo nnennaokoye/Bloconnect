@@ -68,7 +68,7 @@ export default function Home() {
           </div>
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/15">
             <div className="text-3xl font-semibold">2</div>
-            <h4 className="mt-3 font-medium">Create & fund job</h4>
+            <h4 className="mt-3 font-medium">Create and fund job</h4>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Lock payment in the smart contract escrow.</p>
           </div>
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/15">
