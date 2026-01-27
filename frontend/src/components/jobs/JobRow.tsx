@@ -1,5 +1,6 @@
 import StatusBadge from "@/components/ui/StatusBadge";
 import { Job } from "@/types/job";
+import Avatar from "@/components/ui/Avatar";
 
 type Props = {
   job: Job;
@@ -22,7 +23,8 @@ export default function JobRow({ job }: Props) {
           <h3 className="truncate text-sm font-medium sm:text-base">{job.title}</h3>
           <StatusBadge status={job.status} />
         </div>
-        <div className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
+        <div className="mt-1 flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
+          <Avatar name={job.client.name} />
           <span className="font-medium">{job.client.name}</span>
           <span className="mx-2">•</span>
           <span>Budget Ξ {job.budgetEth}</span>
