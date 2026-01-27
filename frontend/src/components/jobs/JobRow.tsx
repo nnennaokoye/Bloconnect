@@ -4,6 +4,7 @@ import Avatar from "@/components/ui/Avatar";
 
 type Props = {
   job: Job;
+  onClick?: (job: Job) => void;
 };
 
 function formatDate(iso: string) {
@@ -15,9 +16,16 @@ function formatDate(iso: string) {
   }
 }
 
-export default function JobRow({ job }: Props) {
+export default function JobRow({ job, onClick }: Props) {
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-black/10 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/15">
+    <div
+      className={`flex flex-col gap-3 rounded-2xl border border-black/10 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/15 ${onClick ? "cursor-pointer hover:bg-black/5 dark:hover:bg-white/5" : ""}`}
+      onClick={onClick ? () => onClick(job) : undefined}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(job); } } : undefined}
+      aria-label={onClick ? `Open job ${job.title}` : undefined}
+    >
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <h3 className="truncate text-sm font-medium sm:text-base">{job.title}</h3>
