@@ -1,20 +1,14 @@
 import StatusBadge from "@/components/ui/StatusBadge";
 import { Job } from "@/types/job";
 import Avatar from "@/components/ui/Avatar";
+import { formatDate, formatEth } from "@/utils/formatters";
 
 type Props = {
   job: Job;
   onClick?: (job: Job) => void;
 };
 
-function formatDate(iso: string) {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-  } catch {
-    return iso;
-  }
-}
+// using shared utils for formatting
 
 export default function JobRow({ job, onClick }: Props) {
   return (
@@ -35,7 +29,7 @@ export default function JobRow({ job, onClick }: Props) {
           <Avatar name={job.client.name} />
           <span className="font-medium">{job.client.name}</span>
           <span className="mx-2">•</span>
-          <span>Budget Ξ {job.budgetEth}</span>
+          <span>Budget {formatEth(job.budgetEth)}</span>
           <span className="mx-2">•</span>
           <span>Deadline {formatDate(job.deadline)}</span>
         </div>
