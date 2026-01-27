@@ -30,13 +30,20 @@ export default function JobDetailModal({ job, open, onClose }: Props) {
     }
   })();
 
+  const titleId = `job-detail-title-${job.id}`;
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4"
       role="dialog"
       aria-modal="true"
-      aria-label={`Job details ${job.title}`}
+      aria-labelledby={titleId}
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          onClose();
+        }
+      }}
     >
       <div
         className="max-h-[90vh] w-full rounded-t-2xl bg-white p-5 shadow-xl dark:bg-zinc-900 sm:max-w-lg sm:rounded-2xl"
@@ -44,7 +51,7 @@ export default function JobDetailModal({ job, open, onClose }: Props) {
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-lg font-semibold">{job.title}</h3>
+            <h3 id={titleId} className="text-lg font-semibold">{job.title}</h3>
             <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               <span className="font-medium">{job.client.name}</span>
             </div>
