@@ -10,6 +10,7 @@ import { Job } from "@/types/job";
 import SearchInput from "@/components/ui/SearchInput";
 import Skeleton from "@/components/ui/Skeleton";
 import EmptyState from "@/components/ui/EmptyState";
+import Switch from "@/components/ui/Switch";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
@@ -49,6 +50,7 @@ export default function JobsList() {
     // reset page when filters change
     setPage(1);
   }, [tab, query, sort]);
+  const [compact, setCompact] = useState(false);
 
   return (
     <section className="mt-10">
@@ -75,6 +77,10 @@ export default function JobsList() {
               <option value="budget_desc">Budget ↓</option>
               <option value="budget_asc">Budget ↑</option>
             </select>
+            <div className="flex items-center gap-2 rounded-full border border-black/10 px-3 py-1 text-sm dark:border-white/20">
+              <span className="text-zinc-600 dark:text-zinc-400">Compact</span>
+              <Switch checked={compact} onChange={setCompact} aria-label="Toggle compact view" />
+            </div>
           </div>
         </div>
       </div>
@@ -95,7 +101,7 @@ export default function JobsList() {
         ) : jobs.length === 0 ? (
           <EmptyState title="No jobs in this view" description="Try switching tabs or adjust your search filters." />
         ) : (
-          pageJobs.map((job) => <JobRow key={job.id} job={job} onClick={setSelected} />)
+          pageJobs.map((job) => <JobRow key={job.id} job={job} onClick={setSelected} compact={compact} />)
         )}
       </div>
 
