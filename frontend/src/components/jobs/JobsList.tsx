@@ -33,9 +33,20 @@ export default function JobsList() {
   }, [tab, query, sort]);
 
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
+  const totalPages = Math.max(1, Math.ceil(jobs.length / pageSize));
+  const pageJobs = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return jobs.slice(start, start + pageSize);
+  }, [jobs, page]);
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(t);
+  }, [tab, query, sort]);
+  useEffect(() => {
+    // reset page when filters change
+    setPage(1);
   }, [tab, query, sort]);
 
   return (
@@ -85,9 +96,36 @@ export default function JobsList() {
             No jobs in this view.
           </div>
         ) : (
-          jobs.map((job) => <JobRow key={job.id} job={job} onClick={setSelected} />)
+          pageJobs.map((job) => <JobRow key={job.id} job={job} onClick={setSelected} />)
         )}
       </div>
+
+      {!loading && jobs.length > 0 && (
+        <div className="mt-4 flex items-center justify-between text-sm text-zinc-600 dark:text-zinc-400">
+          <div>
+            Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, jobs.length)} of {jobs.length}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="rounded-full border border-black/10 px-3 py-1 transition-colors hover:bg-black/5 disabled:opacity-50 dark:border-white/20 dark:hover:bg-white/10"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              Prev
+            </button>
+            <span>
+              Page {page} / {totalPages}
+            </span>
+            <button
+              className="rounded-full border border-black/10 px-3 py-1 transition-colors hover:bg-black/5 disabled:opacity-50 dark:border-white/20 dark:hover:bg-white/10"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
       <JobDetailModal job={selected ?? undefined} open={!!selected} onClose={() => setSelected(null)} />
     </section>
