@@ -2,6 +2,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { Job } from "@/types/job";
 import Avatar from "@/components/ui/Avatar";
 import { formatDate, formatEth } from "@/utils/formatters";
+import IconButton from "@/components/ui/IconButton";
 
 type Props = {
   job: Job;
@@ -31,6 +32,14 @@ export default function JobRow({ job, onClick, compact = false }: Props) {
           <span className="font-medium">{job.client.name}</span>
           <span className="mx-2">•</span>
           <span className="text-zinc-500 dark:text-zinc-400">{job.id}</span>
+          <IconButton
+            icon="📋"
+            label="Copy Job ID"
+            onClick={(e) => {
+              e.stopPropagation();
+              try { navigator.clipboard?.writeText(job.id); } catch {}
+            }}
+          />
           <span className="mx-2">•</span>
           <span>Budget {formatEth(job.budgetEth)}</span>
           <span className="mx-2">•</span>
