@@ -10,6 +10,7 @@ import { Job } from "@/types/job";
 import Skeleton from "@/components/ui/Skeleton";
 import EmptyState from "@/components/ui/EmptyState";
 import FiltersBar, { SortKey } from "@/components/jobs/FiltersBar";
+import Pagination from "@/components/ui/Pagination";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
@@ -90,30 +91,13 @@ export default function JobsList() {
       </div>
 
       {!loading && jobs.length > 0 && (
-        <div className="mt-4 flex items-center justify-between text-sm text-zinc-600 dark:text-zinc-400">
-          <div>
-            Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, jobs.length)} of {jobs.length}
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              className="rounded-full border border-black/10 px-3 py-1 transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 disabled:opacity-50 dark:border-white/20 dark:hover:bg-white/10 dark:focus-visible:ring-white/40"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-            >
-              Prev
-            </button>
-            <span>
-              Page {page} / {totalPages}
-            </span>
-            <button
-              className="rounded-full border border-black/10 px-3 py-1 transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 disabled:opacity-50 dark:border-white/20 dark:hover:bg-white/10 dark:focus-visible:ring-white/40"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          label={`Showing ${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, jobs.length)} of ${jobs.length}`}
+          onPrev={() => setPage((p) => Math.max(1, p - 1))}
+          onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+        />
       )}
 
       <JobDetailModal job={selected ?? undefined} open={!!selected} onClose={() => setSelected(null)} />
