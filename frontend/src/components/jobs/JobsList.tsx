@@ -10,14 +10,15 @@ import { Job } from "@/types/job";
 import Skeleton from "@/components/ui/Skeleton";
 import EmptyState from "@/components/ui/EmptyState";
 import FiltersBar, { SortKey } from "@/components/jobs/FiltersBar";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
 export default function JobsList() {
-  const [tab, setTab] = useState<(typeof TABS)[number]>("all");
+  const [tab, setTab] = useLocalStorage<(typeof TABS)[number]>("jobs-tab", "all");
   const [selected, setSelected] = useState<Job | null>(null);
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<SortKey>("deadline_asc");
+  const [query, setQuery] = useLocalStorage<string>("jobs-query", "");
+  const [sort, setSort] = useLocalStorage<SortKey>("jobs-sort", "deadline_asc");
 
   const jobs = useMemo(() => {
     let data = tab === "all" ? mockJobs : mockJobs.filter((j) => j.status === tab);
@@ -49,7 +50,7 @@ export default function JobsList() {
     // reset page when filters change
     setPage(1);
   }, [tab, query, sort]);
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useLocalStorage<boolean>("jobs-compact", false);
 
   return (
     <section className="mt-10">
