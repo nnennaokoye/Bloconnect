@@ -5,9 +5,12 @@ import Switch from "@/components/ui/Switch";
 import { useEffect, useState } from "react";
 import { formatEth } from "@/utils/formatters";
 import Skeleton from "@/components/ui/Skeleton";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { computeStats } from "@/utils/dashboard";
+import { mockJobs } from "@/data/mockJobs";
 
 export default function SummaryCards() {
-  const [available, setAvailable] = useState(true);
+  const [available, setAvailable] = useLocalStorage<boolean>("artisan-availability", true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,11 +24,11 @@ export default function SummaryCards() {
         {loading ? (
           <Skeleton className="h-6 w-24" />
         ) : (
-          <div className="text-2xl font-semibold">{formatEth(0)}</div>
+          <div className="text-2xl font-semibold">{formatEth(computeStats(mockJobs).earningsEth)}</div>
         )}
       </Card>
       <Card title={<span className="inline-flex items-center gap-2"><span aria-hidden>🛠️</span><span>Active jobs</span></span>}>
-        {loading ? <Skeleton className="h-6 w-10" /> : <div className="text-2xl font-semibold">0</div>}
+        {loading ? <Skeleton className="h-6 w-10" /> : <div className="text-2xl font-semibold">{computeStats(mockJobs).active}</div>}
       </Card>
       <Card title={<span className="inline-flex items-center gap-2"><span aria-hidden>⭐</span><span>Rating</span></span>}>
         {loading ? <Skeleton className="h-6 w-12" /> : <div className="text-2xl font-semibold">—</div>}
