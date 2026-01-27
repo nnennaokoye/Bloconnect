@@ -6,14 +6,15 @@ import { formatDate, formatEth } from "@/utils/formatters";
 type Props = {
   job: Job;
   onClick?: (job: Job) => void;
+  compact?: boolean;
 };
 
 // using shared utils for formatting
 
-export default function JobRow({ job, onClick }: Props) {
+export default function JobRow({ job, onClick, compact = false }: Props) {
   return (
     <div
-      className={`flex flex-col gap-3 rounded-2xl border border-black/10 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/15 ${onClick ? "cursor-pointer hover:bg-black/5 dark:hover:bg-white/5" : ""}`}
+      className={`flex flex-col ${compact ? "gap-2 p-3" : "gap-3 p-4"} rounded-2xl border border-black/10 sm:flex-row sm:items-center sm:justify-between dark:border-white/15 ${onClick ? "cursor-pointer hover:bg-black/5 dark:hover:bg-white/5" : ""}`}
       onClick={onClick ? () => onClick(job) : undefined}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -22,10 +23,10 @@ export default function JobRow({ job, onClick }: Props) {
     >
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <h3 className="truncate text-sm font-medium sm:text-base">{job.title}</h3>
+          <h3 className={`truncate font-medium ${compact ? "text-sm" : "text-sm sm:text-base"}`}>{job.title}</h3>
           <StatusBadge status={job.status} />
         </div>
-        <div className="mt-1 flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
+        <div className={`mt-1 flex items-center gap-2 text-zinc-600 dark:text-zinc-400 ${compact ? "text-xs" : "text-xs sm:text-sm"}`}>
           <Avatar name={job.client.name} />
           <span className="font-medium">{job.client.name}</span>
           <span className="mx-2">•</span>
@@ -36,21 +37,21 @@ export default function JobRow({ job, onClick }: Props) {
       </div>
       <div className="flex shrink-0 items-center gap-2">
         <button
-          className="rounded-full border border-black/10 px-3 py-1 text-sm transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          className={`rounded-full border border-black/10 px-3 ${compact ? "py-0.5 text-xs" : "py-1 text-sm"} transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10`}
           disabled
           title="Submit work (coming soon)"
         >
           Submit Work
         </button>
         <button
-          className="rounded-full border border-black/10 px-3 py-1 text-sm transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          className={`rounded-full border border-black/10 px-3 ${compact ? "py-0.5 text-xs" : "py-1 text-sm"} transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10`}
           disabled
           title="Mark complete (coming soon)"
         >
           Mark Complete
         </button>
         <button
-          className="rounded-full border border-black/10 px-3 py-1 text-sm transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          className={`rounded-full border border-black/10 px-3 ${compact ? "py-0.5 text-xs" : "py-1 text-sm"} transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10`}
           disabled
           title="Message client (coming soon)"
         >
