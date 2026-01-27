@@ -1,0 +1,52 @@
+"use client";
+
+import PillButton from "@/components/ui/PillButton";
+import SearchInput from "@/components/ui/SearchInput";
+import Switch from "@/components/ui/Switch";
+import { JobStatus } from "@/types/job";
+
+export type SortKey = "deadline_asc" | "deadline_desc" | "budget_desc" | "budget_asc";
+
+type Props = {
+  tabs: (JobStatus | "all")[];
+  activeTab: JobStatus | "all";
+  onTab: (t: JobStatus | "all") => void;
+  query: string;
+  onQuery: (v: string) => void;
+  sort: SortKey;
+  onSort: (s: SortKey) => void;
+  compact: boolean;
+  onCompact: (v: boolean) => void;
+};
+
+export default function FiltersBar({ tabs, activeTab, onTab, query, onQuery, sort, onSort, compact, onCompact }: Props) {
+  return (
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+      <div className="flex items-center gap-2 text-sm">
+        {tabs.map((t) => (
+          <PillButton key={t} active={activeTab === t} onClick={() => onTab(t)}>
+            {t.charAt(0).toUpperCase() + t.slice(1)}
+          </PillButton>
+        ))}
+      </div>
+      <div className="flex items-center gap-2">
+        <SearchInput placeholder="Search jobs, clients, IDs" value={query} onChange={(e) => onQuery(e.target.value)} />
+        <select
+          value={sort}
+          onChange={(e) => onSort(e.target.value as SortKey)}
+          className="rounded-full border border-black/10 bg-transparent px-3 py-2 text-sm dark:border-white/20"
+          aria-label="Sort jobs"
+        >
+          <option value="deadline_asc">Deadline ↑</option>
+          <option value="deadline_desc">Deadline ↓</option>
+          <option value="budget_desc">Budget ↓</option>
+          <option value="budget_asc">Budget ↑</option>
+        </select>
+        <div className="flex items-center gap-2 rounded-full border border-black/10 px-3 py-1 text-sm dark:border-white/20">
+          <span className="text-zinc-600 dark:text-zinc-400">Compact</span>
+          <Switch checked={compact} onChange={onCompact} aria-label="Toggle compact view" />
+        </div>
+      </div>
+    </div>
+  );
+}
