@@ -9,6 +9,7 @@ import JobDetailModal from "@/components/jobs/JobDetailModal";
 import { Job } from "@/types/job";
 import SearchInput from "@/components/ui/SearchInput";
 import Skeleton from "@/components/ui/Skeleton";
+import EmptyState from "@/components/ui/EmptyState";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
@@ -92,9 +93,7 @@ export default function JobsList() {
             </div>
           ))
         ) : jobs.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600 dark:border-white/20 dark:text-zinc-400">
-            No jobs in this view.
-          </div>
+          <EmptyState title="No jobs in this view" description="Try switching tabs or adjust your search filters." />
         ) : (
           pageJobs.map((job) => <JobRow key={job.id} job={job} onClick={setSelected} />)
         )}
