@@ -7,28 +7,56 @@ import PillButton from "@/components/ui/PillButton";
 import JobRow from "@/components/jobs/JobRow";
 import JobDetailModal from "@/components/jobs/JobDetailModal";
 import { Job } from "@/types/job";
+import SearchInput from "@/components/ui/SearchInput";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
 export default function JobsList() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("all");
   const [selected, setSelected] = useState<Job | null>(null);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<"deadline_asc" | "deadline_desc" | "budget_desc" | "budget_asc">("deadline_asc");
 
   const jobs = useMemo(() => {
-    if (tab === "all") return mockJobs;
-    return mockJobs.filter((j) => j.status === tab);
-  }, [tab]);
+    let data = tab === "all" ? mockJobs : mockJobs.filter((j) => j.status === tab);
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      data = data.filter((j) => j.title.toLowerCase().includes(q) || j.client.name.toLowerCase().includes(q) || j.id.toLowerCase().includes(q));
+    }
+    const arr = [...data];
+    if (sort === "deadline_asc") arr.sort((a, b) => +new Date(a.deadline) - +new Date(b.deadline));
+    if (sort === "deadline_desc") arr.sort((a, b) => +new Date(b.deadline) - +new Date(a.deadline));
+    if (sort === "budget_desc") arr.sort((a, b) => b.budgetEth - a.budgetEth);
+    if (sort === "budget_asc") arr.sort((a, b) => a.budgetEth - b.budgetEth);
+    return arr;
+  }, [tab, query, sort]);
 
   return (
     <section className="mt-10">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-medium">Jobs</h2>
-        <div className="flex items-center gap-2 text-sm">
-          {TABS.map((t) => (
-            <PillButton key={t} active={tab === t} onClick={() => setTab(t)}>
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-            </PillButton>
-          ))}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <div className="flex items-center gap-2 text-sm">
+            {TABS.map((t) => (
+              <PillButton key={t} active={tab === t} onClick={() => setTab(t)}>
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </PillButton>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <SearchInput placeholder="Search jobs, clients, IDs" value={query} onChange={(e) => setQuery(e.target.value)} />
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as any)}
+              className="rounded-full border border-black/10 bg-transparent px-3 py-2 text-sm dark:border-white/20"
+              aria-label="Sort jobs"
+            >
+              <option value="deadline_asc">Deadline ↑</option>
+              <option value="deadline_desc">Deadline ↓</option>
+              <option value="budget_desc">Budget ↓</option>
+              <option value="budget_asc">Budget ↑</option>
+            </select>
+          </div>
         </div>
       </div>
 
