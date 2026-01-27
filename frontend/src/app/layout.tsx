@@ -54,6 +54,7 @@ export default function RootLayout({
             <nav className="flex items-center gap-4 text-sm">
               <Link href="#how-it-works" className="transition-colors hover:opacity-80">How it works</Link>
               <Link href="/artisans" className="transition-colors hover:opacity-80">Artisans</Link>
+              <Link href="/dashboard/artisan" className="transition-colors hover:opacity-80">Dashboard</Link>
               <Link href="/jobs" className="transition-colors hover:opacity-80">My Jobs</Link>
               <Link href="/admin" className="transition-colors hover:opacity-80">Admin</Link>
               <ThemeToggle />
