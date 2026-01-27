@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { mockJobs } from "@/data/mockJobs";
 import { JobStatus } from "@/types/job";
 import PillButton from "@/components/ui/PillButton";
@@ -8,6 +8,7 @@ import JobRow from "@/components/jobs/JobRow";
 import JobDetailModal from "@/components/jobs/JobDetailModal";
 import { Job } from "@/types/job";
 import SearchInput from "@/components/ui/SearchInput";
+import Skeleton from "@/components/ui/Skeleton";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
@@ -29,6 +30,12 @@ export default function JobsList() {
     if (sort === "budget_desc") arr.sort((a, b) => b.budgetEth - a.budgetEth);
     if (sort === "budget_asc") arr.sort((a, b) => a.budgetEth - b.budgetEth);
     return arr;
+  }, [tab, query, sort]);
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(t);
   }, [tab, query, sort]);
 
   return (
@@ -61,7 +68,19 @@ export default function JobsList() {
       </div>
 
       <div className="grid gap-3">
-        {jobs.length === 0 ? (
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="rounded-2xl border border-black/10 p-4 dark:border-white/15">
+              <Skeleton className="h-4 w-40" />
+              <div className="mt-2 flex items-center gap-2">
+                <Skeleton className="h-6 w-6 rounded-full" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+            </div>
+          ))
+        ) : jobs.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600 dark:border-white/20 dark:text-zinc-400">
             No jobs in this view.
           </div>
