@@ -30,6 +30,8 @@ export default function JobRow({ job, onClick, compact = false }: Props) {
           <Avatar name={job.client.name} />
           <span className="font-medium">{job.client.name}</span>
           <span className="mx-2">•</span>
+          <span className="text-zinc-500 dark:text-zinc-400">{job.id}</span>
+          <span className="mx-2">•</span>
           <span>Budget {formatEth(job.budgetEth)}</span>
           <span className="mx-2">•</span>
           <span>Deadline {formatDate(job.deadline)}</span>
