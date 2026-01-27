@@ -2,6 +2,11 @@ import Link from "next/link";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import JobsList from "@/components/jobs/JobsList";
 
+export const metadata = {
+  title: "Artisan Dashboard · Bloconnect",
+  description: "Manage artisan jobs, earnings, and availability on Bloconnect.",
+};
+
 export default function ArtisanDashboardPage() {
   return (
     <div className="min-h-screen">
