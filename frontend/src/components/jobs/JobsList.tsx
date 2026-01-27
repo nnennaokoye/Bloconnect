@@ -5,11 +5,14 @@ import { mockJobs } from "@/data/mockJobs";
 import { JobStatus } from "@/types/job";
 import PillButton from "@/components/ui/PillButton";
 import JobRow from "@/components/jobs/JobRow";
+import JobDetailModal from "@/components/jobs/JobDetailModal";
+import { Job } from "@/types/job";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
 export default function JobsList() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("all");
+  const [selected, setSelected] = useState<Job | null>(null);
 
   const jobs = useMemo(() => {
     if (tab === "all") return mockJobs;
@@ -35,9 +38,11 @@ export default function JobsList() {
             No jobs in this view.
           </div>
         ) : (
-          jobs.map((job) => <JobRow key={job.id} job={job} />)
+          jobs.map((job) => <JobRow key={job.id} job={job} onClick={setSelected} />)
         )}
       </div>
+
+      <JobDetailModal job={selected ?? undefined} open={!!selected} onClose={() => setSelected(null)} />
     </section>
   );
 }
