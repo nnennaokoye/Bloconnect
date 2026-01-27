@@ -53,6 +53,31 @@ export default function JobsList() {
   }, [tab, query, sort]);
   const [compact, setCompact] = useLocalStorage<boolean>("jobs-compact", false);
 
+  const counts = useMemo(() => {
+    const all = mockJobs.length;
+    const by: Record<(typeof TABS)[number], number> = {
+      all,
+      active: mockJobs.filter((j) => j.status === "active").length,
+      pending: mockJobs.filter((j) => j.status === "pending").length,
+      completed: mockJobs.filter((j) => j.status === "completed").length,
+      disputed: mockJobs.filter((j) => j.status === "disputed").length,
+    } as any;
+    return by;
+  }, []);
+
+  function handleExport() {
+    const headers = ["id", "title", "client", "budgetEth", "deadline", "status"];
+    const rows = jobs.map((j) => [j.id, j.title, j.client.name, j.budgetEth, j.deadline, j.status]);
+    const csv = [headers.join(","), ...rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `jobs_${tab}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <section className="mt-10">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -61,12 +86,14 @@ export default function JobsList() {
           tabs={TABS}
           activeTab={tab}
           onTab={setTab}
+          counts={counts}
           query={query}
           onQuery={setQuery}
           sort={sort}
           onSort={setSort}
           compact={compact}
           onCompact={setCompact}
+          onExport={handleExport}
         />
       </div>
 
