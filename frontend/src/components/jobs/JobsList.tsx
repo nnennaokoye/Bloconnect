@@ -7,10 +7,9 @@ import PillButton from "@/components/ui/PillButton";
 import JobRow from "@/components/jobs/JobRow";
 import JobDetailModal from "@/components/jobs/JobDetailModal";
 import { Job } from "@/types/job";
-import SearchInput from "@/components/ui/SearchInput";
 import Skeleton from "@/components/ui/Skeleton";
 import EmptyState from "@/components/ui/EmptyState";
-import Switch from "@/components/ui/Switch";
+import FiltersBar, { SortKey } from "@/components/jobs/FiltersBar";
 
 const TABS: (JobStatus | "all")[] = ["all", "active", "pending", "completed", "disputed"];
 
@@ -18,7 +17,7 @@ export default function JobsList() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("all");
   const [selected, setSelected] = useState<Job | null>(null);
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<"deadline_asc" | "deadline_desc" | "budget_desc" | "budget_asc">("deadline_asc");
+  const [sort, setSort] = useState<SortKey>("deadline_asc");
 
   const jobs = useMemo(() => {
     let data = tab === "all" ? mockJobs : mockJobs.filter((j) => j.status === tab);
@@ -56,33 +55,17 @@ export default function JobsList() {
     <section className="mt-10">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-medium">Jobs</h2>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-          <div className="flex items-center gap-2 text-sm">
-            {TABS.map((t) => (
-              <PillButton key={t} active={tab === t} onClick={() => setTab(t)}>
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </PillButton>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <SearchInput placeholder="Search jobs, clients, IDs" value={query} onChange={(e) => setQuery(e.target.value)} />
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as any)}
-              className="rounded-full border border-black/10 bg-transparent px-3 py-2 text-sm dark:border-white/20"
-              aria-label="Sort jobs"
-            >
-              <option value="deadline_asc">Deadline ↑</option>
-              <option value="deadline_desc">Deadline ↓</option>
-              <option value="budget_desc">Budget ↓</option>
-              <option value="budget_asc">Budget ↑</option>
-            </select>
-            <div className="flex items-center gap-2 rounded-full border border-black/10 px-3 py-1 text-sm dark:border-white/20">
-              <span className="text-zinc-600 dark:text-zinc-400">Compact</span>
-              <Switch checked={compact} onChange={setCompact} aria-label="Toggle compact view" />
-            </div>
-          </div>
-        </div>
+        <FiltersBar
+          tabs={TABS}
+          activeTab={tab}
+          onTab={setTab}
+          query={query}
+          onQuery={setQuery}
+          sort={sort}
+          onSort={setSort}
+          compact={compact}
+          onCompact={setCompact}
+        />
       </div>
 
       <div className="grid gap-3">
