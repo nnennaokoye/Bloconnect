@@ -50,7 +50,7 @@ export default function FiltersBar({ tabs, activeTab, onTab, counts, query, onQu
         >
           <option value="deadline_asc">Deadline ↑</option>
           <option value="deadline_desc">Deadline ↓</option>
-          <option value="budget_desc">Budget ↓</option>
+          <option value="budget_desc"> ↓</option>
           <option value="budget_asc">Budget ↑</option>
         </select>
         <div className="flex items-center gap-2 rounded-full border border-black/10 px-3 py-1 text-sm dark:border-white/20">
