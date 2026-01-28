@@ -61,7 +61,7 @@ export default function FiltersBar({ tabs, activeTab, onTab, counts, query, onQu
           type="button"
           disabled={!onExport}
           onClick={onExport}
-          title={onExport ? "Export current jobs to CSV" : "Export CSV"}
+          title={onExport ? "Export current jobs to CSV" : "Export"}
           className="rounded-full border border-black/10 px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-black/5 disabled:opacity-50 dark:border-white/20 dark:text-zinc-300 dark:hover:bg-white/10"
         >
           Export CSV
