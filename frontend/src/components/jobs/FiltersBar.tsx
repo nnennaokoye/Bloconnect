@@ -48,7 +48,7 @@ export default function FiltersBar({ tabs, activeTab, onTab, counts, query, onQu
           className="rounded-full border border-black/10 bg-transparent px-3 py-2 text-sm dark:border-white/20"
           aria-label="Sort jobs"
         >
-          <option value="deadline_asc"> ↑</option>
+          <option value="deadline_asc">Deadline ↑</option>
           <option value="deadline_desc">Deadline ↓</option>
           <option value="budget_desc">Budget ↓</option>
           <option value="budget_asc">Budget ↑</option>
