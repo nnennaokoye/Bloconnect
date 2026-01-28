@@ -8,7 +8,7 @@ export default function Home() {
         <section className="flex flex-col items-center gap-8 text-center">
           <div className="flex items-center gap-3 rounded-full border border-black/10 px-3 py-1 text-sm dark:border-white/15">
             <span className="inline-flex h-2 w-2 rounded-full bg-sky-500" />
-            <span>Live on Base soon · Low fees, fast finality</span>
+            <span>Live on Base · Low fees, fast finality</span>
           </div>
           <h1 className="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
             Hire verified artisans with escrowed payments on Base
@@ -21,7 +21,7 @@ export default function Home() {
               href="/artisans"
               className="inline-flex h-12 items-center justify-center rounded-full bg-black px-6 text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-300"
             >
-              Find artisans
+              Find artisans.
             </Link>
             <Link
               href="/profile"
@@ -63,17 +63,17 @@ export default function Home() {
           <div className="grid gap-6 sm:grid-cols-3">
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/15">
             <div className="text-3xl font-semibold">1</div>
-            <h4 className="mt-3 font-medium">Browse artisans</h4>
+            <h4 className="mt-3 font-medium">Browse artisans ?</h4>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Pick a verified artisan that fits your job.</p>
           </div>
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/15">
             <div className="text-3xl font-semibold">2</div>
-            <h4 className="mt-3 font-medium">Create & fund job</h4>
+            <h4 className="mt-3 font-medium">Create and fund job</h4>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Lock payment in the smart contract escrow.</p>
           </div>
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/15">
             <div className="text-3xl font-semibold">3</div>
-            <h4 className="mt-3 font-medium">Complete or claim</h4>
+            <h4 className="mt-3 font-medium">Complete or Claim</h4>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Client marks complete for withdrawal, or artisan claims after timeout.</p>
           </div>
           </div>
