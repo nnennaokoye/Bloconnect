@@ -8,7 +8,7 @@ export default function Loading() {
         ))}
       </div>
       <div className="mt-10 space-y-3">
-        {Array.from({ length: 4 }).map((_, i) => (
+        {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="h-16 animate-pulse rounded-2xl bg-black/10 dark:bg-white/10" />
         ))}
       </div>
