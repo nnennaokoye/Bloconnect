@@ -59,7 +59,7 @@ export default function FiltersBar({ tabs, activeTab, onTab, counts, query, onQu
         </div>
         <button
           type="button"
-          disabled={!onExport}
+          disabled={onExport}
           onClick={onExport}
           title={"Export current jobs to CSV"}
           className="rounded-full border border-black/10 px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-black/5 disabled:opacity-50 dark:border-white/20 dark:text-zinc-300 dark:hover:bg-white/10"
